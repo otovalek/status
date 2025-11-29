@@ -1,0 +1,76 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-title" content="status.valek.net">
+  <meta property="og:title" content="status.valek.net">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://status.valek.net/">
+  <link rel="canonical" href="https://status.valek.net/">
+  <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <title>status.valek.net</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500" rel="stylesheet">
+  <style>
+    body { padding: 0; margin: 0; }
+    h1 { font-family: "Trebuchet MS",Tahoma,sans-serif; color: white; margin: 0; padding: 1ex 4ex; min-height: 30px; font-size: 34px; background: linear-gradient(to top, #FFFFFF, #F8F8F8 0.5px, #C7C7C7 1.5px, #6D6D6D 2.5px, #3C3C3C 3.5px, #343434 4.5px 5.5px, #CC0038 5.5px); }
+  </style>
+  <style>
+    h1                      { text-align: left; padding-left: max(calc(calc(100% - 55rem) / 2 + 1rem), 4ex); }
+    @media (max-width:22em) { h1 { text-align: center; padding-inline: 0; } }
+    html                    { font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
+    body                    { text-align: center; }
+    ul                      { display: inline-block; list-style-type: none; border: solid 1px #E2E4E9; border-radius: 0.667rem; padding: 0; margin: 1rem; width: clamp(14rem, calc(100% - 2rem), 55rem); }
+    li                      { padding: 0.5rem 0 0 0; }
+    h2                      { position: relative; color: #191C24; font-weight: 500; font-size: 0.83rem; float: left; margin: 0.2rem 0.1rem 0 2.3rem; line-height: 1; white-space: nowrap; }
+    h2::before              { display: inline-block; position:absolute; width: 0.83rem; height: 0.83rem; left: -1.3rem; content: ''; background-size: contain; }
+    .operational h2::before { background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="14.4" height="14.4" viewBox="0 0 14.4 14.4"><path fill="%23059669" d="M7.2 14.4A7.2 7.2 0 1 0 7.2 0a7.2 7.2 0 0 0 0 14.4m3.39-8.98a21 21 0 0 0-3.75 4.78.68.68 0 0 1-1.06.13L3.8 8.35c-.63-.63.32-1.58.95-.95l1.37 1.37a23 23 0 0 1 3.54-4.34c.65-.62 1.58.35.93.97"/></svg>'); }
+    .downtime    h2::before { background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="14.4" height="14.4" viewBox="0 0 14.4 14.4"><path fill="%23B91C1C" d="M7.2 11.7c1.3 0 1.3-1.9 0-1.9s-1.3 1.9 0 1.9m0-9a.95.95 0 0 0-.94.97v4.11c0 1.28 1.91 1.28 1.91 0v-4.1a1 1 0 0 0-.94-.98M0 7.2a7.2 7.2 0 1 1 14.4 0A7.2 7.2 0 0 1 0 7.2"/></svg>'); }
+    figure                  { color: #059669; font-weight: 500; font-size: 0.72rem; float: right; margin: 0.2rem 1.1rem 0 0.1rem; white-space: nowrap; cursor: pointer; }
+    .downtime figure        { color: #191C24; }
+    div                     { clear: both; width: calc(100% - 2rem); margin: 0 auto; padding: 0.25rem 0 0.5rem; border-bottom: 1px solid #E2E4E9; }
+    li:last-child div       { border-bottom: none; }
+    span                    { background: #EEEFF2; display: inline-block; width: calc(100% / 90 - 1px); height: 1.25rem; margin-right: 1px; }
+    span.green              { background: #059669; }
+    span.red                { background: #B91C1C; }
+    span:first-child        { border-top-left-radius:  0.222rem; border-bottom-left-radius: 0.222rem;  }
+    span:last-child         { border-top-right-radius: 0.222rem; border-bottom-right-radius: 0.222rem; }
+    span:hover              { opacity: 60%; }
+  </style>
+  <script>
+  window.onload = () => {
+    fetch("https://cors.io/?url=https://valek.betteruptime.com/")
+    .then(response => response.text())
+    .then(text => {
+      const ul = document.createElement("ul");
+      const doc = new DOMParser().parseFromString(text, "text/html");
+      for (const monitor of doc.querySelectorAll(".section-content > div")) {
+        const name   = monitor.querySelector(".text-statuspage-neutral-800.shrink").textContent;
+        const uptime = monitor.querySelector("span").textContent;
+        const icon   = monitor.querySelector("use").href.baseVal.match("#icon-([a-z]+)")[1];
+        const li     = ul.appendChild(Object.assign(document.createElement("li"), { className: icon }));
+        const figure = document.createElement("figure");
+        li.appendChild(document.createElement("h2")).append(name);
+        li.appendChild(figure).append(uptime);
+        li.dataset.uptime = parseFloat(uptime);
+        figure.onclick = (e => ul.append(...Array.from(ul.children).sort((a, b) => b.dataset.uptime - a.dataset.uptime)));
+        const div = li.appendChild(document.createElement("div"));
+        for (const tick of monitor.querySelectorAll(".tick")) {
+          const color = tick.className.match(" bg-statuspage-([a-z]+)")[1];
+          const tooltip = doc.getElementById(tick.dataset.htmlTooltipId);
+          const date  = tooltip.querySelector("div > div:nth-child(3)").textContent.trim();
+          const text1 = tooltip.querySelector("div > div:nth-child(1) > div > div")?.textContent.trim().replaceAll("\\n","");
+          const text2 = tooltip.querySelector("div > div:nth-child(1) > div > p")?.textContent.trim().replaceAll("\\n","");
+          div.append(Object.assign(document.createElement("span"), { className: color, title: date+"\n"+(text2 ?? text1)}));
+        }
+      }
+      document.body.append(ul);
+    });
+  };
+  </script>
+</head>
+<body><h1>status.valek.net</h1></body>
+</html>
