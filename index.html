@@ -61,10 +61,10 @@
         const div = li.appendChild(document.createElement("div"));
         for (const tick of monitor.querySelectorAll(".tick")) {
           const color = tick.className.match(" bg-statuspage-([a-z]+)")[1];
-          const tooltip = doc.getElementById(tick.dataset.htmlTooltipId);
-          const date  = tooltip.querySelector("div > div:nth-child(3)").textContent.trim();
-          const text1 = tooltip.querySelector("div > div:nth-child(1) > div > div")?.textContent.trim().replaceAll("\\n","");
-          const text2 = tooltip.querySelector("div > div:nth-child(1) > div > p")?.textContent.trim().replaceAll("\\n","");
+          const tooltip = doc.getElementById(tick.dataset.htmlTooltipTemplate);
+          const date  = tick.dataset.tooltipInterval;
+          const text1 = tooltip.content.querySelector("div > div > div").textContent.trim().replaceAll("\\n","");
+          const text2 = tick.dataset.tooltipDetail?.trim().replaceAll("&nbsp;"," ");
           div.append(Object.assign(document.createElement("span"), { className: color, title: date+"\n"+(text2 ?? text1)}));
         }
       }
