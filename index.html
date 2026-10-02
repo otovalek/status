@@ -19,7 +19,7 @@
     h1 { font-family: "Trebuchet MS",Tahoma,sans-serif; color: white; margin: 0; padding: 1ex 4ex; min-height: 30px; font-size: 34px; background: linear-gradient(to top, #FFFFFF, #F8F8F8 0.5px, #C7C7C7 1.5px, #6D6D6D 2.5px, #3C3C3C 3.5px, #343434 4.5px 5.5px, #CC0038 5.5px); }
   </style>
   <style>
-    h1                        { text-align: left; padding-left: max(calc(calc(100% - 55rem) / 2 + 1rem), 4ex); }
+    h1                        { text-align: left; padding-left: max(calc(calc(100% - 55rem) / 2 + 1rem), 4ex); display: none; }
     @media (max-width:22em)   { h1 { text-align: center; padding-inline: 0; } }
     html                      { font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
     body                      { text-align: center; }
@@ -47,7 +47,12 @@
     .then(response => response.json())
     .then(json => {
       const ul = document.createElement("ul");
-      for (const monitor of json.included.filter(x => x.type=="status_page_resource")) {
+      const monitors = json.included.filter(x => x.type=="status_page_resource");
+      if (monitors.every(x => x.attributes.status=="operational")) {
+        document.querySelector("h1").style.background = getComputedStyle(document.querySelector("h1")).background.replace("204, 0, 56", "5, 150, 105");
+      }
+      document.querySelector("h1").style.display = "revert";
+      for (const monitor of monitors) {
         const name   = monitor.attributes.public_name;
         const uptime = (Math.floor(100000*monitor.attributes.availability)/1000).toFixed(3)+"% uptime";
         const icon   = monitor.attributes.status;
