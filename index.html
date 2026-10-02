@@ -43,15 +43,14 @@
   </style>
   <script>
   window.onload = () => {
-    fetch("https://cors.io/?url=https://valek.betteruptime.com/")
-    .then(response => response.text())
-    .then(text => {
+    fetch("https://valek.betteruptime.com/index.json")
+    .then(response => response.json())
+    .then(json => {
       const ul = document.createElement("ul");
-      const doc = new DOMParser().parseFromString(text, "text/html");
-      for (const monitor of doc.querySelectorAll(".section-content > div")) {
-        const name   = monitor.querySelector(".text-statuspage-neutral-800.shrink").textContent;
-        const uptime = monitor.querySelector("span").textContent;
-        const icon   = monitor.querySelector("use").href.baseVal.match("#icon-([a-z_]+)")[1];
+      for (const monitor of json.included.filter(x => x.type=="status_page_resource")) {
+        const name   = monitor.attributes.public_name;
+        const uptime = (Math.floor(100000*monitor.attributes.availability)/1000).toFixed(3)+"% uptime";
+        const icon   = monitor.attributes.status;
         const li     = ul.appendChild(Object.assign(document.createElement("li"), { className: icon }));
         const figure = document.createElement("figure");
         li.appendChild(document.createElement("h2")).append(name);
@@ -59,13 +58,12 @@
         li.dataset.uptime = parseFloat(uptime);
         figure.onclick = (e => ul.append(...Array.from(ul.children).sort((a, b) => b.dataset.uptime - a.dataset.uptime)));
         const div = li.appendChild(document.createElement("div"));
-        for (const tick of monitor.querySelectorAll(".tick")) {
-          const color = tick.className.match(" bg-statuspage-([a-z]+)")[1];
-          const tooltip = doc.getElementById(tick.dataset.htmlTooltipTemplate);
-          const date  = tick.dataset.tooltipInterval;
-          const text1 = tooltip.content.querySelector("div > div > div").textContent.trim().replaceAll("\\n","");
-          const text2 = tick.dataset.tooltipDetail?.trim().replaceAll("&nbsp;"," ");
-          div.append(Object.assign(document.createElement("span"), { className: color, title: date+"\n"+(text2 ?? text1)}));
+        for (const tick of monitor.attributes.status_history) {
+          const color = (tick.status == "operational" ? "green" : "red");
+          const date  = new Intl.DateTimeFormat("en-US", { day: "2-digit", month: "short", year: "numeric" }).format(new Date(tick.day));
+          const text1 = tick.status.charAt(0).toUpperCase() + tick.status.slice(1);
+          const text2 = (Math.floor(tick.downtime_duration/3600)+" hours "+Math.floor(tick.downtime_duration % 3600 / 60)+" minutes").replaceAll(/\b1 (\w+)s/g,"1 $1").replaceAll(/\b0 (\w+)s/g,"").trim();
+          div.append(Object.assign(document.createElement("span"), { className: color, title: date+"\n"+(text2 ? "Down for "+text2 : text1)}));
         }
       }
       document.body.append(ul);
