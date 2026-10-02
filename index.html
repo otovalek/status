@@ -23,16 +23,16 @@
     @media (max-width:22em)   { h1 { text-align: center; padding-inline: 0; } }
     html                      { font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
     body                      { text-align: center; }
-    ul                        { display: inline-block; list-style-type: none; border: solid 1px #E2E4E9; border-radius: 0.667rem; padding: 0; margin: 1rem; width: clamp(14rem, calc(100% - 2rem), 55rem); }
+    ul                        { display: inline-block; list-style-type: none; border: solid 1px #E2E4E9; border-radius: 0.667rem; padding: 0; margin: min(1rem, 3vw) auto; width: clamp(14rem, calc(100% - min(2rem,7%)), 55rem); }
     li                        { padding: 0.4rem 0 0 0; }
-    h2                        { position: relative; color: #191C24; font-weight: 500; font-size: 0.83rem; float: left; margin: 0.2rem 0.1rem 0 2.3rem; line-height: 1; white-space: nowrap; }
+    h2                        { position: relative; color: #191C24; font-weight: 500; font-size: 0.83rem; float: left; margin: 0.2rem 0.1rem 0 calc(1.3rem + min(1rem, 3.5%)); line-height: 1; white-space: nowrap; }
     h2::before                { display: inline-block; position:absolute; width: 0.83rem; height: 0.83rem; left: -1.3rem; content: ''; background-size: contain; }
     .operational   h2::before { background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="14.4" height="14.4" viewBox="0 0 14.4 14.4"><path fill="%23059669" d="M7.2 14.4A7.2 7.2 0 1 0 7.2 0a7.2 7.2 0 0 0 0 14.4m3.39-8.98a21 21 0 0 0-3.75 4.78.68.68 0 0 1-1.06.13L3.8 8.35c-.63-.63.32-1.58.95-.95l1.37 1.37a23 23 0 0 1 3.54-4.34c.65-.62 1.58.35.93.97"/></svg>'); }
     .downtime      h2::before { background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="14.4" height="14.4" viewBox="0 0 14.4 14.4"><path fill="%23B91C1C" d="M7.2 11.7c1.3 0 1.3-1.9 0-1.9s-1.3 1.9 0 1.9m0-9a.95.95 0 0 0-.94.97v4.11c0 1.28 1.91 1.28 1.91 0v-4.1a1 1 0 0 0-.94-.98M0 7.2a7.2 7.2 0 1 1 14.4 0A7.2 7.2 0 0 1 0 7.2"/></svg>'); }
     .not_monitored h2::before { background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="14.4" height="14.4" viewBox="0 0 14.4 14.4"><circle stroke="%23CCC" fill="none" cx="7.2" cy="7.2" r="5.5" stroke-width="3.4"/></svg>'); }
-    figure                    { color: #059669; font-weight: 500; font-size: 0.72rem; float: right; margin: 0.2rem 1.1rem 0 0.1rem; white-space: nowrap; cursor: pointer; }
+    figure                    { color: #059669; font-weight: 500; font-size: 0.72rem; float: right; margin: 0.2rem calc(0.1rem + min(1rem, 3.5%)) 0 0.1rem; white-space: nowrap; cursor: pointer; }
     .downtime figure          { color: #191C24; }
-    div                       { clear: both; width: calc(100% - 2rem); margin: 0 auto; padding: 0.15rem 0 0.4rem; border-bottom: 1px solid #E2E4E9; }
+    div                       { clear: both; width: calc(100% - min(2rem,7%)); margin: 0 auto; padding: 0.15rem 0 0.4rem; border-bottom: 1px solid #E2E4E9; }
     li:last-child div         { border-bottom: none; }
     span                      { background: #EEEFF2; display: inline-block; width: calc(100% / 90 - 1px); height: 1.25rem; margin-right: 1px; }
     span.green                { background: #059669; }
